@@ -72,9 +72,15 @@ export const YoutubeList = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("data::::::::", data);
-        // debugger;
-        // _.unescape([string=''])
-        setVideos(data.items);
+
+        setVideos(
+          data.items.map((item) => {
+            console.log("data.items.mapの中のitem", item);
+            item.snippet.title = _.unescape(item.snippet.title);
+            return item;
+          })
+        );
+        console.log("mapしたあとのdata::::::::", data);
       });
   }, [query]);
 
@@ -134,7 +140,8 @@ export const YoutubeList = () => {
                     variant="top"
                     src={video.snippet.thumbnails.high.url}
                   />
-                  <div>{_.unescape(video.snippet.title)}</div>
+                  {/* <div>{_.unescape(video.snippet.title)}</div> */}
+                  <div>{video.snippet.title}</div>
                 </div>
               </Card>
             </div>
