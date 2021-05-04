@@ -1,0 +1,26 @@
+body {
+  /* background-color: #faf8ff; */
+  background-color: #eeeeee;
+  /* background-color: #e3e0f3; */
+}
+
+.modal-body {
+  height: 90vh;
+}
+
+.modal-big {
+  max-height: 90vh;
+}
+
+.modal-content {
+  width: auto;
+}
+
+.fade {
+  display: flex !important;
+  align-items: center;
+}
+
+.Toastify__toast-body {
+  color: #6c757d;
+}
