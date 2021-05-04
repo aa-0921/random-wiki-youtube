@@ -12,12 +12,14 @@ import _ from "lodash";
 // import { toast } from "react-toastify";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
-// const RANDOM_WIKI_API_URI = "https://ja.wikipedia.org/w/api.php?format=xml&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
-// const RANDOM_WIKI_API_URI =
-//   "https://crossorigin.me/https://ja.wikipedia.org/w/api.php?format=xml&action=query&prop=info&titles=%E3%82%A8%E3%83%9E%E3%83%BB%E3%83%AF%E3%83%88%E3%82%BD%E3%83%B3";
 
 const RANDOM_WIKI_API_URI =
-  "https://ja.wikipedia.org/w/api.php?action=query&list=random&rnlimit=10&format=json";
+  "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1";
+// &origin=localhost
+// const RANDOM_WIKI_API_URI =
+//   "https://crossorigin.me/https://ja.wikipedia.org/w/api.php?format=xml&action=query&prop=info&titles=%E3%82%A8%E3%83%9E%E3%83%BB%E3%83%AF%E3%83%88%E3%82%BD%E3%83%B3";
+// const RANDOM_WIKI_API_URI =
+//   "https://ja.wikipedia.org/w/api.php?action=query&list=random&rnlimit=10&format=json";
 
 export const YoutubeList = () => {
   const [videos, setVideos] = useState([]);
@@ -37,16 +39,17 @@ export const YoutubeList = () => {
     // var max = 5;
     // var page_num = Math.floor(Math.random() * (max + 1 - min)) + min;
 
-    // const fetchOption = {};
-
+    const fetchOption = {};
     // Headerを作成
-    // const headers = new Headers();
-    // headers.append("Access-Control-Allow-Origin", "*");
+    const headers = new Headers();
+    headers.append("Access-Control-Allow-Origin", "*");
+    headers.append("mode", "no-cors");
+    headers.append("Content-Type", "application/json");
 
-    // fetchOption["headers"] = headers;
+    fetchOption["headers"] = headers;
 
-    // fetch(RANDOM_WIKI_API_URI, fetchOption)
-    fetch(RANDOM_WIKI_API_URI)
+    fetch(RANDOM_WIKI_API_URI, fetchOption)
+      // fetch(RANDOM_WIKI_API_URI)
       .then((response) => response.json())
       .then((wiki_data) => {
         console.log("WIKI_data::::::::", wiki_data);
