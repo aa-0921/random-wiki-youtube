@@ -6,18 +6,25 @@ import "../../assets/App.css";
 
 import React, { useState, useEffect } from "react";
 import { Button, CardColumns, Card, Form } from "react-bootstrap";
+import _ from "lodash";
 // import { VerticallyCenteredModal } from "../components/VerticallyCenteredModal";
 // import { Toast } from "../components/Toast";
 // import { toast } from "react-toastify";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
+// const RANDOM_WIKI_API_URI = "https://ja.wikipedia.org/w/api.php?format=xml&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
+// const RANDOM_WIKI_API_URI =
+//   "https://crossorigin.me/https://ja.wikipedia.org/w/api.php?format=xml&action=query&prop=info&titles=%E3%82%A8%E3%83%9E%E3%83%BB%E3%83%AF%E3%83%88%E3%82%BD%E3%83%B3";
+
+const RANDOM_WIKI_API_URI =
+  "https://ja.wikipedia.org/w/api.php?action=query&list=random&rnlimit=10&format=json";
 
 export const YoutubeList = () => {
   const [videos, setVideos] = useState([]);
   //検索フォームの文字列
   const [text, setText] = useState("");
   //今なんの検索文字列で検索しているか
-  const [query, setQuery] = useState("resort");
+  const [query, setQuery] = useState("twice");
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
 
@@ -29,6 +36,22 @@ export const YoutubeList = () => {
     // var min = 1;
     // var max = 5;
     // var page_num = Math.floor(Math.random() * (max + 1 - min)) + min;
+
+    // const fetchOption = {};
+
+    // Headerを作成
+    // const headers = new Headers();
+    // headers.append("Access-Control-Allow-Origin", "*");
+
+    // fetchOption["headers"] = headers;
+
+    // fetch(RANDOM_WIKI_API_URI, fetchOption)
+    fetch(RANDOM_WIKI_API_URI)
+      .then((response) => response.json())
+      .then((wiki_data) => {
+        console.log("WIKI_data::::::::", wiki_data);
+      });
+    // setVideos(wiki_data.items);
 
     const params = {
       key: YOUTUBE_API_KEY,
@@ -49,6 +72,8 @@ export const YoutubeList = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("data::::::::", data);
+        // debugger;
+        // _.unescape([string=''])
         setVideos(data.items);
       });
   }, [query]);
@@ -109,6 +134,7 @@ export const YoutubeList = () => {
                     variant="top"
                     src={video.snippet.thumbnails.high.url}
                   />
+                  <div>{_.unescape(video.snippet.title)}</div>
                 </div>
               </Card>
             </div>
