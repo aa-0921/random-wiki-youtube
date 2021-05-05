@@ -14,8 +14,10 @@ const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
 
 const RANDOM_WIKI_API_URI =
-  "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1";
+  "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
 // &origin=localhost
+// &origin=*
+
 // const RANDOM_WIKI_API_URI =
 //   "https://crossorigin.me/https://ja.wikipedia.org/w/api.php?format=xml&action=query&prop=info&titles=%E3%82%A8%E3%83%9E%E3%83%BB%E3%83%AF%E3%83%88%E3%82%BD%E3%83%B3";
 // const RANDOM_WIKI_API_URI =
@@ -30,61 +32,60 @@ export const YoutubeList = () => {
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
 
+  // const gotData = (data) => {
+  //   console.log("gotDataのdata", data);
+  // };
   useEffect(() => {
     console.log("useEffectが走りました");
-    console.log(process.env.REACT_APP_CLIENT_ID);
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    //表示するページ数をランダムに
-    // var min = 1;
-    // var max = 5;
-    // var page_num = Math.floor(Math.random() * (max + 1 - min)) + min;
+    // const fetchOption = {};
+    // // Headerを作成
+    // const headers = new Headers();
+    // headers.append("Access-Control-Allow-Origin", "*");
+    // headers.append("mode", "no-cors");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Origin", "http://localhost:3000/");
 
-    const fetchOption = {};
-    // Headerを作成
-    const headers = new Headers();
-    headers.append("Access-Control-Allow-Origin", "*");
-    headers.append("mode", "no-cors");
-    headers.append("Content-Type", "application/json");
+    // "Origin", "http://www.yourpage.com"
+    // fetchOption["headers"] = headers;
 
-    fetchOption["headers"] = headers;
-
-    fetch(RANDOM_WIKI_API_URI, fetchOption)
-      // fetch(RANDOM_WIKI_API_URI)
+    // fetch(RANDOM_WIKI_API_URI, fetchOption)
+    fetch(RANDOM_WIKI_API_URI)
       .then((response) => response.json())
       .then((wiki_data) => {
         console.log("WIKI_data::::::::", wiki_data);
       });
+
+    // loadJSON(RANDOM_WIKI_API_URI, gotData);
     // setVideos(wiki_data.items);
 
-    const params = {
-      key: YOUTUBE_API_KEY,
-      q: query, // 検索キーワード
-      type: "video", // video,channel,playlistから選択できる
-      maxResults: "3", // 結果の最大数
-      order: "viewCount", // 結果の並び順を再生回数の多い順に
-      part: "snippet",
-    };
-    const queryParams = new URLSearchParams(params);
+    // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // const params = {
+    //   key: YOUTUBE_API_KEY,
+    //   q: query, // 検索キーワード
+    //   type: "video", // video,channel,playlistから選択できる
+    //   maxResults: "3", // 結果の最大数
+    //   order: "viewCount", // 結果の並び順を再生回数の多い順に
+    //   part: "snippet",
+    // };
+    // const queryParams = new URLSearchParams(params);
 
-    fetch(
-      YOUTUBE_SERACH_API_URI + queryParams
-      // `https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&q=${query}&maxResults=3&key=${YOUTUBE_API_KEY}`
-      // `https://api.unsplash.com/search/photos?query=${query}&page=${page_num}&per_page=30&client_id=${process.env.YOUTUBE_API_KEY}` // `https://api.unsplash.com/search/photos?query=${query}&client_id=${process.env.REACT_APP_CLIENT_ID}`
-      // `https://api.unsplash.com/search/collections?query=${query}&page="5"&client_id=${process.env.REACT_APP_CLIENT_ID}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data::::::::", data);
+    // fetch(YOUTUBE_SERACH_API_URI + queryParams)
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("data::::::::", data);
 
-        setVideos(
-          data.items.map((item) => {
-            console.log("data.items.mapの中のitem", item);
-            item.snippet.title = _.unescape(item.snippet.title);
-            return item;
-          })
-        );
-        console.log("mapしたあとのdata::::::::", data);
-      });
+    //     setVideos(
+    //       data.items.map((item) => {
+    //         console.log("data.items.mapの中のitem", item);
+    //         item.snippet.title = _.unescape(item.snippet.title);
+    //         return item;
+    //       })
+    //     );
+    //     console.log("mapしたあとのdata::::::::", data);
+    //   });
+    // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }, [query]);
 
   const onSubmit = (e) => {
