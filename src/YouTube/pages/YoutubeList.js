@@ -15,19 +15,12 @@ const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
 
 const RANDOM_WIKI_API_URI =
   "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
-// &origin=localhost
-// &origin=*
-
-// const RANDOM_WIKI_API_URI =
-//   "https://crossorigin.me/https://ja.wikipedia.org/w/api.php?format=xml&action=query&prop=info&titles=%E3%82%A8%E3%83%9E%E3%83%BB%E3%83%AF%E3%83%88%E3%82%BD%E3%83%B3";
-// const RANDOM_WIKI_API_URI =
-//   "https://ja.wikipedia.org/w/api.php?action=query&list=random&rnlimit=10&format=json";
 
 export const YoutubeList = () => {
   const [videos, setVideos] = useState([]);
   //検索フォームの文字列
   const [text, setText] = useState("");
-  //今なんの検索文字列で検索しているか
+  //今なんの検索文字列で検索しているのか
   const [query, setQuery] = useState("twice");
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
@@ -35,62 +28,76 @@ export const YoutubeList = () => {
   // const gotData = (data) => {
   //   console.log("gotDataのdata", data);
   // };
+
+  const getRandomWiki = async () => {
+    const res = await fetch(RANDOM_WIKI_API_URI);
+    console.log(res);
+
+    const data = await res.json();
+    console.log(data);
+    // debugger;
+    setQuery(data.query.random[0].title);
+  };
+
+  // getWeather()
+  //   .then((data) => {
+  //     console.log(JSON.stringify(data));
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+  // fetch(RANDOM_WIKI_API_URI)
+  //   .then((response) => response.json())
+  //   .then((wiki_data) => {
+  //     // debugger;
+  //     setQuery(wiki_data.query.random[0].title);
+  //     // wiki_data.query.random[0].title
+  //     console.log("WIKI_data::::::::", wiki_data);
+  //   });
+
   useEffect(() => {
     console.log("useEffectが走りました");
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // const fetchOption = {};
-    // // Headerを作成
-    // const headers = new Headers();
-    // headers.append("Access-Control-Allow-Origin", "*");
-    // headers.append("mode", "no-cors");
-    // headers.append("Content-Type", "application/json");
-    // headers.append("Origin", "http://localhost:3000/");
-
-    // "Origin", "http://www.yourpage.com"
-    // fetchOption["headers"] = headers;
-
-    // fetch(RANDOM_WIKI_API_URI, fetchOption)
-    fetch(RANDOM_WIKI_API_URI)
-      .then((response) => response.json())
-      .then((wiki_data) => {
-        console.log("WIKI_data::::::::", wiki_data);
-      });
-
-    // loadJSON(RANDOM_WIKI_API_URI, gotData);
-    // setVideos(wiki_data.items);
-
+    // getRandomWiki();
     // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // const params = {
-    //   key: YOUTUBE_API_KEY,
-    //   q: query, // 検索キーワード
-    //   type: "video", // video,channel,playlistから選択できる
-    //   maxResults: "3", // 結果の最大数
-    //   order: "viewCount", // 結果の並び順を再生回数の多い順に
-    //   part: "snippet",
-    // };
-    // const queryParams = new URLSearchParams(params);
+    const params = {
+      key: YOUTUBE_API_KEY,
+      q: query, // 検索キーワード
+      // type: "video", // video,channel,playlistから選択できる
+      maxResults: "3", // 結果の最大数
+      order: "viewCount", // 結果の並び順を再生回数の多い順に
+      part: "snippet",
+      videoType: "any",
+    };
+    const queryParams = new URLSearchParams(params);
 
-    // fetch(YOUTUBE_SERACH_API_URI + queryParams)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("data::::::::", data);
+    console.log("検索直前queryの内容", query);
+    console.log(
+      "YOUTUBE_SERACH_API_URI + queryParams",
+      YOUTUBE_SERACH_API_URI + queryParams
+    );
 
-    //     setVideos(
-    //       data.items.map((item) => {
-    //         console.log("data.items.mapの中のitem", item);
-    //         item.snippet.title = _.unescape(item.snippet.title);
-    //         return item;
-    //       })
-    //     );
-    //     console.log("mapしたあとのdata::::::::", data);
-    //   });
+    fetch(YOUTUBE_SERACH_API_URI + queryParams)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data::::::::", data);
+
+        setVideos(
+          data.items.map((item) => {
+            item.snippet.title = _.unescape(item.snippet.title);
+            return item;
+          })
+        );
+        console.log("mapしたあとのdata::::::::", data);
+      });
     // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }, [query]);
 
   const onSubmit = (e) => {
     e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
-    setQuery(text); //inputタグに入れられた文字が入る
+    // setQuery(text); //inputタグに入れられた文字が入る
+    getRandomWiki();
     // notify(text);
     setText(""); //フォームはまっさらな状態に戻したい
     console.log("onSubmitが呼ばれました。");
@@ -130,10 +137,11 @@ export const YoutubeList = () => {
               placeholder="Search text"
             />
             <Button type="submit" className="my-2">
-              Search
+              なにがでるかな
             </Button>
           </Form>
         </div>
+        <div className="display-query text-2xl">{query}</div>
         <CardColumns>
           {videos.map((video) => (
             <div key={video.id.videoId}>
@@ -144,7 +152,6 @@ export const YoutubeList = () => {
                     variant="top"
                     src={video.snippet.thumbnails.high.url}
                   />
-                  {/* <div>{_.unescape(video.snippet.title)}</div> */}
                   <div>{video.snippet.title}</div>
                 </div>
               </Card>
