@@ -56,11 +56,7 @@ export const YoutubeList = () => {
   //     console.log("WIKI_data::::::::", wiki_data);
   //   });
 
-  useEffect(() => {
-    console.log("useEffectが走りました");
-
-    // getRandomWiki();
-    // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  const getYouTubeVideos = async () => {
     const params = {
       key: YOUTUBE_API_KEY,
       q: query, // 検索キーワード
@@ -72,27 +68,67 @@ export const YoutubeList = () => {
     };
     const queryParams = new URLSearchParams(params);
 
-    console.log("検索直前queryの内容", query);
-    console.log(
-      "YOUTUBE_SERACH_API_URI + queryParams",
-      YOUTUBE_SERACH_API_URI + queryParams
-    );
+    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
+    const data = await res.json();
 
-    fetch(YOUTUBE_SERACH_API_URI + queryParams)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data::::::::", data);
+    if (data.items) {
+      setVideos(
+        data.items.map((item) => {
+          item.snippet.title = _.unescape(item.snippet.title);
+          return item;
+        })
+      );
+    } else {
+      getRandomWiki();
+      // onSubmit();
+    }
+    // setQuery(data.query.random[0].title);
+  };
 
-        setVideos(
-          data.items.map((item) => {
-            item.snippet.title = _.unescape(item.snippet.title);
-            return item;
-          })
-        );
-        console.log("mapしたあとのdata::::::::", data);
-      });
-    // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  }, [query]);
+  // useEffect(() => {
+  //   console.log("useEffectが走りました");
+
+  //   // getRandomWiki();
+  //   // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //   const params = {
+  //     key: YOUTUBE_API_KEY,
+  //     q: query, // 検索キーワード
+  //     // type: "video", // video,channel,playlistから選択できる
+  //     maxResults: "3", // 結果の最大数
+  //     order: "viewCount", // 結果の並び順を再生回数の多い順に
+  //     part: "snippet",
+  //     videoType: "any",
+  //   };
+  //   const queryParams = new URLSearchParams(params);
+
+  //   console.log("検索直前queryの内容", query);
+  //   console.log(
+  //     "YOUTUBE_SERACH_API_URI + queryParams",
+  //     YOUTUBE_SERACH_API_URI + queryParams
+  //   );
+
+  //   fetch(YOUTUBE_SERACH_API_URI + queryParams)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("data::::::::", data);
+  //       console.log("data.items::::::::", data.items);
+
+  //       if (data.items) {
+  //         setVideos(
+  //           data.items.map((item) => {
+  //             item.snippet.title = _.unescape(item.snippet.title);
+  //             return item;
+  //           })
+  //         );
+  //       } else {
+  //         getRandomWiki();
+  //         // onSubmit();
+  //       }
+
+  //       console.log("mapしたあとのdata::::::::", data);
+  //     });
+  //   // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // }, [query]);
 
   const onSubmit = (e) => {
     e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
@@ -101,6 +137,7 @@ export const YoutubeList = () => {
     // notify(text);
     setText(""); //フォームはまっさらな状態に戻したい
     console.log("onSubmitが呼ばれました。");
+    getYouTubeVideos();
   };
 
   // const notify = (text) => {
