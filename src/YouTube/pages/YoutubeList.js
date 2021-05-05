@@ -21,7 +21,11 @@ export const YoutubeList = () => {
   //検索フォームの文字列
   const [text, setText] = useState("");
   //今なんの検索文字列で検索しているのか
-  const [query, setQuery] = useState("twice");
+  const [query, setQuery] = useState("初期値");
+  const [randomTitle, setRandomTitle] = useState("");
+
+  console.log("query", query);
+
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
 
@@ -29,15 +33,102 @@ export const YoutubeList = () => {
   //   console.log("gotDataのdata", data);
   // };
 
+  const onSubmit = async (e) => {
+    console.log("①onSubmit内のquery", query);
+    console.log("②onSubmit内のtext", text);
+
+    e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
+    // setQuery(text); //inputタグに入れられた文字が入る
+    // await getRandomWiki();
+    getRandomWiki().then((random_title) => {
+      console.log("getRandomWiki().thenの中のrandom_title", random_title);
+
+      setRandomTitle(random_title);
+      console.log("getRandomWiki().thenの中のquery", query);
+
+      // getYouTubeVideos();
+    });
+
+    // setQuery(randomTitle);
+    // debugger;
+    console.log("⑤getRandomWiki直後のquery", query);
+    console.log("⑥getRandomWiki直後のtext", text);
+    // notify(text);
+    setText(""); //フォームはまっさらな状態に戻したい
+    console.log("onSubmitが呼ばれました。");
+    // getYouTubeVideos();
+  };
+
+  useEffect(() => {
+    if (randomTitle) {
+      setQuery(randomTitle);
+    }
+    getYouTubeVideos();
+  }, [randomTitle]);
+
   const getRandomWiki = async () => {
     const res = await fetch(RANDOM_WIKI_API_URI);
-    console.log(res);
+    // console.log(res);
 
     const data = await res.json();
-    console.log(data);
+    console.log("③getRandomWiki内のdata", data);
+    console.log("④data.query.random[0].title", data.query.random[0].title);
+
+    const random_title = data.query.random[0].title;
     // debugger;
-    setQuery(data.query.random[0].title);
+    return random_title;
+    // setRandomTitle(random_title);
+    // debugger;
   };
+
+  const getYouTubeVideos = async () => {
+    const params = {
+      key: YOUTUBE_API_KEY,
+      q: query, // 検索キーワード
+      // type: "video", // video,channel,playlistから選択できる
+      maxResults: "3", // 結果の最大数
+      order: "viewCount", // 結果の並び順を再生回数の多い順に
+      part: "snippet",
+      videoType: "any",
+    };
+    const queryParams = new URLSearchParams(params);
+
+    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
+    const data = await res.json();
+    console.log("⑦getYouTubeVideos内のdata", data);
+    console.log("⑧getYouTubeVideos内のquery", query);
+    console.log("⑨getYouTubeVideos内のdata.items", data.items);
+
+    if (data.items) {
+      console.log("⑩getYouTubeVideos内のtrue", data.items);
+
+      // await setVideos(
+
+      setVideos(
+        data.items.map((item) => {
+          item.snippet.title = _.unescape(item.snippet.title);
+          return item;
+        })
+      );
+    } else {
+      console.log("elseのonSubmit直前");
+      onSubmit();
+      // onSubmit();
+    }
+    // setQuery(data.query.random[0].title);
+  };
+
+  // const getRandomWiki = () => {
+  //   const res = fetch(RANDOM_WIKI_API_URI);
+  //   // console.log(res);
+
+  //   const data = res.json();
+  //   console.log("getRandomWiki内のdata", data);
+  //   console.log("data.query.random[0].title", data.query.random[0].title);
+
+  //   setQuery(data.query.random[0].title);
+  //   debugger;
+  // };
 
   // getWeather()
   //   .then((data) => {
@@ -55,35 +146,6 @@ export const YoutubeList = () => {
   //     // wiki_data.query.random[0].title
   //     console.log("WIKI_data::::::::", wiki_data);
   //   });
-
-  const getYouTubeVideos = async () => {
-    const params = {
-      key: YOUTUBE_API_KEY,
-      q: query, // 検索キーワード
-      // type: "video", // video,channel,playlistから選択できる
-      maxResults: "3", // 結果の最大数
-      order: "viewCount", // 結果の並び順を再生回数の多い順に
-      part: "snippet",
-      videoType: "any",
-    };
-    const queryParams = new URLSearchParams(params);
-
-    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
-    const data = await res.json();
-
-    if (data.items) {
-      setVideos(
-        data.items.map((item) => {
-          item.snippet.title = _.unescape(item.snippet.title);
-          return item;
-        })
-      );
-    } else {
-      getRandomWiki();
-      // onSubmit();
-    }
-    // setQuery(data.query.random[0].title);
-  };
 
   // useEffect(() => {
   //   console.log("useEffectが走りました");
@@ -129,16 +191,6 @@ export const YoutubeList = () => {
   //     });
   //   // ~~~~youtube~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // }, [query]);
-
-  const onSubmit = (e) => {
-    e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
-    // setQuery(text); //inputタグに入れられた文字が入る
-    getRandomWiki();
-    // notify(text);
-    setText(""); //フォームはまっさらな状態に戻したい
-    console.log("onSubmitが呼ばれました。");
-    getYouTubeVideos();
-  };
 
   // const notify = (text) => {
   //   toast(`${text}で検索しました`, {
