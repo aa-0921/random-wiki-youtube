@@ -3,6 +3,7 @@
 // import { VideoList } from "../components/VideoList";
 // import "../assets/App.css";
 import "../../assets/App.css";
+import { RandomResult } from "../pages/sample";
 
 import React, { useState, useEffect } from "react";
 import { Button, CardColumns, Card, Form } from "react-bootstrap";
@@ -24,7 +25,7 @@ export const YoutubeList = () => {
   const [query, setQuery] = useState("初期値");
   const [randomTitle, setRandomTitle] = useState("");
 
-  console.log("query", query);
+  // console.log("YoutubeList内のquery", query);
 
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
@@ -260,6 +261,7 @@ export const YoutubeList = () => {
         )} */}
         {/* <Toast /> */}
       </div>
+      <RandomResult />
     </div>
   );
 };
