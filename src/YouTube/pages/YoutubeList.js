@@ -5,7 +5,7 @@
 import "../../assets/App.css";
 import { RandomResult } from "../pages/sample";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { Button, CardColumns, Card, Form } from "react-bootstrap";
 import _ from "lodash";
 // import { VerticallyCenteredModal } from "../components/VerticallyCenteredModal";
@@ -22,9 +22,12 @@ export const YoutubeList = () => {
   //検索フォームの文字列
   const [text, setText] = useState("");
   //今なんの検索文字列で検索しているのか
-  const [query, setQuery] = useState("初期値");
-  const [randomTitle, setRandomTitle] = useState("");
+  // const [query, setQuery] = useState("初期値");
+  // const [randomTitle, setRandomTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // const [result, setResult] = useState("");
 
+  const [displayRandomWikiTitle, setDisplayRandomWikiTitle] = useState("");
   // console.log("YoutubeList内のquery", query);
 
   // const [modalShow, setModalShow] = useState(false);
@@ -34,58 +37,110 @@ export const YoutubeList = () => {
   //   console.log("gotDataのdata", data);
   // };
 
-  const onSubmit = async (e) => {
-    console.log("①onSubmit内のquery", query);
-    console.log("②onSubmit内のtext", text);
+  // const onSubmit = async (e) => {
+  //   console.log("①onSubmit内のquery", query);
+  //   console.log("②onSubmit内のtext", text);
 
-    e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
-    // setQuery(text); //inputタグに入れられた文字が入る
-    // await getRandomWiki();
-    getRandomWiki().then((random_title) => {
-      console.log("getRandomWiki().thenの中のrandom_title", random_title);
+  //   e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
+  //   // setQuery(text); //inputタグに入れられた文字が入る
+  //   // await getRandomWiki();
+  //   getRandomWiki().then((random_title) => {
+  //     console.log("getRandomWiki().thenの中のrandom_title", random_title);
 
-      setRandomTitle(random_title);
-      console.log("getRandomWiki().thenの中のquery", query);
+  //     setRandomTitle(random_title);
+  //     console.log("getRandomWiki().thenの中のquery", query);
 
-      // getYouTubeVideos();
-    });
+  //     // getYouTubeVideos();
+  //   });
 
-    // setQuery(randomTitle);
-    // debugger;
-    console.log("⑤getRandomWiki直後のquery", query);
-    console.log("⑥getRandomWiki直後のtext", text);
-    // notify(text);
-    setText(""); //フォームはまっさらな状態に戻したい
-    console.log("onSubmitが呼ばれました。");
-    // getYouTubeVideos();
-  };
+  //   // setQuery(randomTitle);
+  //   // debugger;
+  //   console.log("⑤getRandomWiki直後のquery", query);
+  //   console.log("⑥getRandomWiki直後のtext", text);
+  //   // notify(text);
+  //   setText(""); //フォームはまっさらな状態に戻したい
+  //   console.log("onSubmitが呼ばれました。");
+  //   // getYouTubeVideos();
+  // };
 
-  useEffect(() => {
-    if (randomTitle) {
-      setQuery(randomTitle);
-    }
-    getYouTubeVideos();
-  }, [randomTitle]);
+  // useEffect(() => {
+  //   if (randomTitle) {
+  //     setQuery(randomTitle);
+  //   }
+  //   getYouTubeVideos();
+  // }, [randomTitle]);
 
-  const getRandomWiki = async () => {
+  // const getRandomWiki = async () => {
+  //   const res = await fetch(RANDOM_WIKI_API_URI);
+  //   // console.log(res);
+
+  //   const data = await res.json();
+  //   console.log("③getRandomWiki内のdata", data);
+  //   console.log("④data.query.random[0].title", data.query.random[0].title);
+
+  //   const random_title = data.query.random[0].title;
+  //   // debugger;
+  //   return random_title;
+  //   // setRandomTitle(random_title);
+  //   // debugger;
+  // };
+
+  // const getYouTubeVideos = async () => {
+  //   const params = {
+  //     key: YOUTUBE_API_KEY,
+  //     q: query, // 検索キーワード
+  //     // type: "video", // video,channel,playlistから選択できる
+  //     maxResults: "3", // 結果の最大数
+  //     order: "viewCount", // 結果の並び順を再生回数の多い順に
+  //     part: "snippet",
+  //     videoType: "any",
+  //   };
+  //   const queryParams = new URLSearchParams(params);
+
+  //   const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
+  //   const data = await res.json();
+  //   console.log("⑦getYouTubeVideos内のdata", data);
+  //   console.log("⑧getYouTubeVideos内のquery", query);
+  //   console.log("⑨getYouTubeVideos内のdata.items", data.items);
+
+  //   if (data.items) {
+  //     console.log("⑩getYouTubeVideos内のtrue", data.items);
+
+  //     // await setVideos(
+
+  //     setVideos(
+  //       data.items.map((item) => {
+  //         item.snippet.title = _.unescape(item.snippet.title);
+  //         return item;
+  //       })
+  //     );
+  //   } else {
+  //     console.log("elseのonSubmit直前");
+  //     onSubmit();
+  //     // onSubmit();
+  //   }
+  //   // setQuery(data.query.random[0].title);
+  // };
+
+  // --------------------------------------
+  const getRandomWikiData = useCallback(async function () {
     const res = await fetch(RANDOM_WIKI_API_URI);
-    // console.log(res);
+
+    console.log("getRandomWikiData内のres", res);
 
     const data = await res.json();
-    console.log("③getRandomWiki内のdata", data);
-    console.log("④data.query.random[0].title", data.query.random[0].title);
+
+    //   console.log("③getRandomWiki内のdata", data);
+    //   console.log("④data.query.random[0].title", data.query.random[0].title);
 
     const random_title = data.query.random[0].title;
-    // debugger;
     return random_title;
-    // setRandomTitle(random_title);
-    // debugger;
-  };
+  }, []);
 
-  const getYouTubeVideos = async () => {
+  const getYoutubeData = useCallback(async function (randomWikiTitle) {
     const params = {
       key: YOUTUBE_API_KEY,
-      q: query, // 検索キーワード
+      q: randomWikiTitle, // 検索キーワード
       // type: "video", // video,channel,playlistから選択できる
       maxResults: "3", // 結果の最大数
       order: "viewCount", // 結果の並び順を再生回数の多い順に
@@ -97,27 +152,28 @@ export const YoutubeList = () => {
     const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
     const data = await res.json();
     console.log("⑦getYouTubeVideos内のdata", data);
-    console.log("⑧getYouTubeVideos内のquery", query);
+    // console.log("⑧getYouTubeVideos内のquery", query);
     console.log("⑨getYouTubeVideos内のdata.items", data.items);
 
-    if (data.items) {
-      console.log("⑩getYouTubeVideos内のtrue", data.items);
+    return data.items;
+  }, []);
 
-      // await setVideos(
+  const onSubmit = useCallback(function (e) {
+    e.preventDefault(); //submitボタンにもともと備わっている画面遷移を打ち消す
 
-      setVideos(
-        data.items.map((item) => {
-          item.snippet.title = _.unescape(item.snippet.title);
-          return item;
-        })
-      );
-    } else {
-      console.log("elseのonSubmit直前");
-      onSubmit();
-      // onSubmit();
-    }
-    // setQuery(data.query.random[0].title);
-  };
+    console.log("onSubmit内上部");
+
+    setIsLoading(true);
+    getRandomWikiData().then(function (randomWikiTitle) {
+      console.log("getRandomWikiData後の", randomWikiTitle);
+
+      getYoutubeData(randomWikiTitle).then(function (result) {
+        setDisplayRandomWikiTitle(randomWikiTitle);
+        setVideos(result);
+        setIsLoading(false);
+      });
+    });
+  }, []);
 
   // const getRandomWiki = () => {
   //   const res = fetch(RANDOM_WIKI_API_URI);
@@ -210,11 +266,6 @@ export const YoutubeList = () => {
   // };
 
   return (
-    // <>
-    //   <SearchHeader onSerchYoutube={onSerchYoutube} />
-    //   {/* 追加 */}
-    //   {videos ? <VideoList videos={videos} /> : <></>}
-    // </>
     <div className="text-center">
       <div className="container flex flex-col items-center">
         <div className="form-block w-1/2 my-4">
@@ -231,23 +282,30 @@ export const YoutubeList = () => {
             </Button>
           </Form>
         </div>
-        <div className="display-query text-2xl">{query}</div>
-        <CardColumns>
-          {videos.map((video) => (
-            <div key={video.id.videoId}>
-              <Card className="border-none">
-                {/* <div onClick={() => handleModalSubmit(image)} variant="light"> */}
-                <div variant="light">
-                  <Card.Img
-                    variant="top"
-                    src={video.snippet.thumbnails.high.url}
-                  />
-                  <div>{video.snippet.title}</div>
+        <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
+        {isLoading ? (
+          <div>loading...</div>
+        ) : (
+          <>
+            <CardColumns>
+              {videos.map((video) => (
+                <div key={video.id.videoId}>
+                  <Card className="border-none">
+                    {/* <div onClick={() => handleModalSubmit(image)} variant="light"> */}
+                    <div variant="light">
+                      <Card.Img
+                        variant="top"
+                        src={video.snippet.thumbnails.high.url}
+                      />
+                      <div>{video.snippet.title}</div>
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
-          ))}
-        </CardColumns>
+              ))}
+            </CardColumns>
+          </>
+        )}
+
         {/* clickedImageの有無によって表示を分岐
 これによって、clickedImage内のhashでundefinedのエラーがでない */}
         {/* {clickedImage ? (
@@ -261,7 +319,6 @@ export const YoutubeList = () => {
         )} */}
         {/* <Toast /> */}
       </div>
-      <RandomResult />
     </div>
   );
 };
