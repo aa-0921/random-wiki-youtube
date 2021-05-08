@@ -1,5 +1,5 @@
 import "../../assets/App.css";
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
 // import _ from "lodash";
 import { VideoList } from "../components/VideoList";
@@ -14,6 +14,7 @@ export const YoutubeList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [displayRandomWikiTitle, setDisplayRandomWikiTitle] = useState("");
   const [videoExistText, setVideoExistText] = useState("");
+  const [isFirstView, setIsFirstView] = useState(true);
 
   const getRandomWikiData = useCallback(async function () {
     const params = {
@@ -67,36 +68,60 @@ export const YoutubeList = () => {
       videoType: "any",
     };
     const queryParams = new URLSearchParams(params);
-    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
-    const data = await res.json();
+    // try {
+    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams).catch(
+      () => "ゲスト"
+    );
 
+    if (res.data === undefined) {
+      // throw new Error("Whoops!");
+      console.log("APIの失敗");
+    }
+
+    console.log("res.data", res.data);
+    const data = await res.json();
     return data.items;
   }, []);
 
-  const onSubmit = useCallback(function () {
-    var parent_element = document.getElementById("set-wiki-extract");
-    var clone = parent_element.cloneNode(false); //ガワだけ複製して…
-    parent_element.parentNode.replaceChild(clone, parent_element); //すげ替え。
-    console.log("onSubmit内上部");
+  const onSubmit = useCallback(
+    function () {
+      var parent_element = document.getElementById("set-wiki-extract");
+      var clone = parent_element.cloneNode(false); //ガワだけ複製して…
+      parent_element.parentNode.replaceChild(clone, parent_element); //すげ替え。
+      console.log("onSubmit内上部");
 
-    setIsLoading(true);
-    getRandomWikiData().then(function (randomWikiTitle) {
-      fetchWikiDataFromTitle(randomWikiTitle).then(function (randomWikiTitle) {
-        getYoutubeData(randomWikiTitle).then(function (result) {
-          setDisplayRandomWikiTitle(randomWikiTitle);
-          setVideos(result);
-
-          if (videos !== []) {
-            setVideoExistText("YouTube関連動画");
-          } else {
-            setVideoExistText("YouTube関連動画なし。");
-          }
-
-          setIsLoading(false);
+      setIsFirstView(false);
+      setIsLoading(true);
+      getRandomWikiData().then(function (randomWikiTitle) {
+        fetchWikiDataFromTitle(randomWikiTitle).then(function (
+          randomWikiTitle
+        ) {
+          getYoutubeData(randomWikiTitle).then(function (result) {
+            setDisplayRandomWikiTitle(randomWikiTitle);
+            setVideos(result);
+            setIsLoading(false);
+          });
         });
       });
-    });
-  }, []);
+    },
+    [fetchWikiDataFromTitle, getRandomWikiData, getYoutubeData]
+  );
+
+  useEffect(() => {
+    console.log("ifの中のvideos", videos);
+    console.log("ifの中のvideos.class", videos.class);
+
+    console.log("videos.length > 0", videos.length > 0);
+
+    // isFirstView;
+    if (!isFirstView) {
+      if (videos.length > 0) {
+        setVideoExistText("YouTube関連動画");
+      } else {
+        setVideoExistText("YouTube関連動画なし。");
+      }
+    }
+  }, [videos]);
 
   // const notify = (text) => {
   //   toast(`${text}で検索しました`, {
@@ -130,7 +155,7 @@ export const YoutubeList = () => {
         </div>
         <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
 
-        <div className="h-96">
+        <div className="video-list-wrap">
           <VideoList
             videos={videos}
             isLoading={isLoading}

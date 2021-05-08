@@ -24,3 +24,7 @@ body {
 .Toastify__toast-body {
   color: #6c757d;
 }
+
+.video-list-wrap {
+  height: 50vh;
+}
