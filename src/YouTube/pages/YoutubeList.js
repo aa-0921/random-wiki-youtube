@@ -1,6 +1,6 @@
 import "../../assets/App.css";
 import React, { useState, useCallback } from "react";
-import { Button, CardColumns, Card, Form } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import _ from "lodash";
 import { VideoList } from "../components/VideoList";
 // import { VerticallyCenteredModal } from "../components/VerticallyCenteredModal";
@@ -17,6 +17,8 @@ export const YoutubeList = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [displayRandomWikiTitle, setDisplayRandomWikiTitle] = useState("");
+  // const [displayWikiExtract, setDisplayWikiExtract] = useState("");
+
   // const [modalShow, setModalShow] = useState(false);
   // const [clickedImage, setClickedImage] = useState(undefined);
 
@@ -48,9 +50,10 @@ export const YoutubeList = () => {
       format: "json",
       action: "query",
       titles: randomWikiTitle,
-      // prop: "extracts&exintro&explaintext",
+      // titles: "フレディ・クルーガー",
+
       prop: "extracts",
-      explaintext: "true", //HTMLではなくプレインテキストを返す
+      // explaintext: "true", //HTMLではなくプレインテキストを返す
       redirects: "1",
       origin: "*",
     };
@@ -65,11 +68,18 @@ export const YoutubeList = () => {
     const data = await res.json();
     // debugger;
     const obj = data.query.pages;
-    const wikiExtract = Object.keys(obj).map(function (key) {
+    var wikiExtract = Object.keys(obj).map(function (key) {
       return obj[key];
     })[0].extract;
-    console.log("fetchWikiDataFromTitleのdata", data);
+
+    wikiExtract = createElementFromHTML(wikiExtract);
+    var parent_element = document.getElementById("set-wiki-extract");
+    parent_element.appendChild(wikiExtract);
+
     console.log("fetchWikiDataFromTitleのwikiExtract", wikiExtract);
+
+    // setDisplayWikiExtract(wikiExtract);
+    console.log("fetchWikiDataFromTitleのdata", data);
 
     // const random_title = data.query.random[0].title;
 
@@ -101,15 +111,17 @@ export const YoutubeList = () => {
 
     setIsLoading(true);
     getRandomWikiData().then(function (randomWikiTitle) {
+      var parent_element = document.getElementById("set-wiki-extract");
+      var clone = parent_element.cloneNode(false); //ガワだけ複製して…
+      parent_element.parentNode.replaceChild(clone, parent_element); //すげ替え。
+
       console.log("getRandomWikiData後の", randomWikiTitle);
 
-      fetchWikiDataFromTitle(randomWikiTitle).then(function (
-        sameRandomWikiTitle
-      ) {
-        console.log("fetchWikiDataFromTitle後の", sameRandomWikiTitle);
+      fetchWikiDataFromTitle(randomWikiTitle).then(function (randomWikiTitle) {
+        console.log("fetchWikiDataFromTitle後の", randomWikiTitle);
 
-        getYoutubeData(sameRandomWikiTitle).then(function (result) {
-          setDisplayRandomWikiTitle(sameRandomWikiTitle);
+        getYoutubeData(randomWikiTitle).then(function (result) {
+          setDisplayRandomWikiTitle(randomWikiTitle);
           setVideos(result);
           console.log("setVideos後のvideos", videos);
 
@@ -135,6 +147,12 @@ export const YoutubeList = () => {
   //   setModalShow(true);
   // };
 
+  const createElementFromHTML = (html) => {
+    const tempEl = document.createElement("div");
+    tempEl.innerHTML = html;
+    return tempEl.firstElementChild;
+  };
+
   return (
     <div className="text-center">
       <div className="container flex flex-col items-center">
@@ -144,9 +162,14 @@ export const YoutubeList = () => {
           </Button>
         </div>
         <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
-        {/* ------------------------- */}
-        <VideoList videos={videos} isLoading={isLoading} />
 
+        {/* <div id="set-wiki-extract" className="display-query text-2xl"></div> */}
+
+        {/* displayWikiExtract */}
+        {/* ------------------------- */}
+        <div className="h-96">
+          <VideoList videos={videos} isLoading={isLoading} />
+        </div>
         {/* clickedImageの有無によって表示を分岐
 これによって、clickeexport const functionName = (params) => {
 }
@@ -161,6 +184,9 @@ dImage内のhashでundefinedのエラーがでない */}
           <></>
         )} */}
         {/* <Toast /> */}
+        <div id="set-wiki-extract" className="display-query text-2xl">
+          {/* {displayWikiExtract} */}
+        </div>
       </div>
     </div>
   );
