@@ -112,7 +112,7 @@ export const YoutubeList = () => {
 
   useEffect(() => {
     console.log("ifの中のvideos", videos);
-    console.log("ifの中のvideos.class", videos.class);
+    // console.log("ifの中のvideos.class", videos.class);
 
     console.log("videos.length > 0", videos.length > 0);
 
