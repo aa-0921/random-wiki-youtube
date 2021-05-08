@@ -29,12 +29,6 @@ export const YoutubeList = () => {
       rnlimit: "1",
       origin: "*",
       prop: "info",
-      // -----------
-      // action: "query",
-      // format: "json",
-      // titles: "Albert Einstein",
-      // prop: "info",
-      // inprop: "url|talkid",
     };
     const queryParams = new URLSearchParams(params);
 
@@ -44,8 +38,42 @@ export const YoutubeList = () => {
     const data = await res.json();
     console.log("wikidata", data);
     const random_title = data.query.random[0].title;
+    console.log("getRandomWikiData内のrandom_title", random_title);
 
     return random_title;
+  }, []);
+
+  const fetchWikiDataFromTitle = useCallback(async function (randomWikiTitle) {
+    const params = {
+      format: "json",
+      action: "query",
+      titles: randomWikiTitle,
+      // prop: "extracts&exintro&explaintext",
+      prop: "extracts",
+      explaintext: "true", //HTMLではなくプレインテキストを返す
+      redirects: "1",
+      origin: "*",
+    };
+    const queryParams = new URLSearchParams(params);
+
+    const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
+    console.log(
+      "fetchWikiDataFromTitleのwikiURL",
+      RANDOM_WIKI_API_URI + queryParams
+    );
+
+    const data = await res.json();
+    // debugger;
+    const obj = data.query.pages;
+    const wikiExtract = Object.keys(obj).map(function (key) {
+      return obj[key];
+    })[0].extract;
+    console.log("fetchWikiDataFromTitleのdata", data);
+    console.log("fetchWikiDataFromTitleのwikiExtract", wikiExtract);
+
+    // const random_title = data.query.random[0].title;
+
+    return randomWikiTitle;
   }, []);
 
   const getYoutubeData = useCallback(async function (randomWikiTitle) {
@@ -75,12 +103,18 @@ export const YoutubeList = () => {
     getRandomWikiData().then(function (randomWikiTitle) {
       console.log("getRandomWikiData後の", randomWikiTitle);
 
-      getYoutubeData(randomWikiTitle).then(function (result) {
-        setDisplayRandomWikiTitle(randomWikiTitle);
-        setVideos(result);
-        console.log("setVideos後のvideos", videos);
+      fetchWikiDataFromTitle(randomWikiTitle).then(function (
+        sameRandomWikiTitle
+      ) {
+        console.log("fetchWikiDataFromTitle後の", sameRandomWikiTitle);
 
-        setIsLoading(false);
+        getYoutubeData(sameRandomWikiTitle).then(function (result) {
+          setDisplayRandomWikiTitle(sameRandomWikiTitle);
+          setVideos(result);
+          console.log("setVideos後のvideos", videos);
+
+          setIsLoading(false);
+        });
       });
     });
   }, []);
