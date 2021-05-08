@@ -142,9 +142,9 @@ export const YoutubeList = () => {
   return (
     <div className="text-center">
       <div className="container flex flex-col items-center">
-        <div className="form-block w-1/2 my-4">
+        <div className="form-block w-1/2 my-4 pt-20">
           <Button onClick={() => onSubmit()} className="my-2">
-            なにがでるかな
+            What's coming up
           </Button>
         </div>
         <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
