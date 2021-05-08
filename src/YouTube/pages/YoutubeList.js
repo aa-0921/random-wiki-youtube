@@ -9,7 +9,8 @@ const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
 
 const RANDOM_WIKI_API_URI =
-  "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
+  // "https://ja.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=1&origin=*";
+  "https://ja.wikipedia.org/w/api.php?";
 
 export const YoutubeList = () => {
   const [videos, setVideos] = useState([]);
@@ -19,8 +20,28 @@ export const YoutubeList = () => {
   // const [clickedImage, setClickedImage] = useState(undefined);
 
   const getRandomWikiData = useCallback(async function () {
-    const res = await fetch(RANDOM_WIKI_API_URI);
+    const params = {
+      format: "json",
+      action: "query",
+      list: "random",
+      rnnamespace: "0",
+      rnlimit: "1",
+      origin: "*",
+      prop: "info",
+      // -----------
+      // action: "query",
+      // format: "json",
+      // titles: "Albert Einstein",
+      // prop: "info",
+      // inprop: "url|talkid",
+    };
+    const queryParams = new URLSearchParams(params);
+
+    const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
+    console.log("wikiURL", RANDOM_WIKI_API_URI + queryParams);
+
     const data = await res.json();
+    console.log("wikidata", data);
     const random_title = data.query.random[0].title;
 
     return random_title;
@@ -105,6 +126,16 @@ export const YoutubeList = () => {
                           src={video.snippet.thumbnails.high.url}
                         />
                         <div>{video.snippet.title}</div>
+                        <a
+                          href={`https://www.youtube.com/embed/${video.id.videoId}`}
+                        >
+                          YouTubeのリンク（埋め込み）
+                        </a>
+                        <a
+                          href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+                        >
+                          YouTubeのリンク
+                        </a>
                       </div>
                     </Card>
                   </div>
