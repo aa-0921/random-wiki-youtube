@@ -15,76 +15,67 @@ export const YoutubeList = () => {
   const [videoExistText, setVideoExistText] = useState("");
   const [isFirstView, setIsFirstView] = useState(true);
 
-  const getRandomWikiData = useCallback(
-    async function () {
-      const params = {
-        format: "json",
-        action: "query",
-        list: "random",
-        rnnamespace: "0",
-        rnlimit: "1",
-        origin: "*",
-        prop: "info",
-      };
-      const queryParams = new URLSearchParams(params);
-      const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
-      const data = await res.json();
-      const random_title = data.query.random[0].title;
+  const getRandomWikiData = useCallback(async function () {
+    const params = {
+      format: "json",
+      action: "query",
+      list: "random",
+      rnnamespace: "0",
+      rnlimit: "1",
+      origin: "*",
+      prop: "info",
+    };
+    const queryParams = new URLSearchParams(params);
+    const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
+    const data = await res.json();
+    const random_title = data.query.random[0].title;
 
-      return random_title;
-    },
-    [isLoading]
-  );
+    return random_title;
+  }, []);
 
-  const fetchWikiDataFromTitle = useCallback(
-    async function (randomWikiTitle) {
-      const params = {
-        format: "json",
-        action: "query",
-        titles: randomWikiTitle,
-        prop: "extracts",
-        redirects: "1",
-        origin: "*",
-      };
-      const queryParams = new URLSearchParams(params);
-      const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
-      const data = await res.json();
-      const obj = data.query.pages;
-      var wikiExtract = Object.keys(obj).map(function (key) {
-        return obj[key];
-      })[0].extract;
+  const fetchWikiDataFromTitle = useCallback(async function (randomWikiTitle) {
+    const params = {
+      format: "json",
+      action: "query",
+      titles: randomWikiTitle,
+      prop: "extracts",
+      redirects: "1",
+      origin: "*",
+    };
+    const queryParams = new URLSearchParams(params);
+    const res = await fetch(RANDOM_WIKI_API_URI + queryParams);
+    const data = await res.json();
+    const obj = data.query.pages;
+    var wikiExtract = Object.keys(obj).map(function (key) {
+      return obj[key];
+    })[0].extract;
 
-      wikiExtract = createElementFromHTML(wikiExtract);
-      var parent_element = document.getElementById("set-wiki-extract");
-      parent_element.appendChild(wikiExtract);
+    wikiExtract = createElementFromHTML(wikiExtract);
+    var parent_element = document.getElementById("set-wiki-extract");
+    parent_element.appendChild(wikiExtract);
 
-      return randomWikiTitle;
-    },
-    [isLoading]
-  );
+    return randomWikiTitle;
+  }, []);
 
-  const getYoutubeData = useCallback(
-    async function (randomWikiTitle) {
-      const params = {
-        key: YOUTUBE_API_KEY,
-        q: randomWikiTitle, // 検索キーワード
-        maxResults: "3", // 結果の最大数
-        order: "viewCount", // 結果の並び順を再生回数の多い順に
-        part: "snippet",
-        videoType: "any",
-      };
-      const queryParams = new URLSearchParams(params);
-      const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
+  const getYoutubeData = useCallback(async function (randomWikiTitle) {
+    const params = {
+      key: YOUTUBE_API_KEY,
+      q: randomWikiTitle, // 検索キーワード
+      maxResults: "3", // 結果の最大数
+      order: "viewCount", // 結果の並び順を再生回数の多い順に
+      part: "snippet",
+      videoType: "any",
+    };
+    const queryParams = new URLSearchParams(params);
+    const res = await fetch(YOUTUBE_SERACH_API_URI + queryParams);
 
-      if (res.data === undefined) {
-        console.log("APIの失敗");
-      }
+    if (res.data === undefined) {
+      console.log("APIの失敗");
+    }
 
-      const data = await res.json();
-      return data.items;
-    },
-    [isLoading]
-  );
+    const data = await res.json();
+    return data.items;
+  }, []);
 
   const onSubmit = useCallback(
     function () {
