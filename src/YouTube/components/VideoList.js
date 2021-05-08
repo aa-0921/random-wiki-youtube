@@ -1,23 +1,47 @@
-import React from "react";
+import "../../assets/App.css";
+import React, { useState, useCallback } from "react";
+import { Button, CardColumns, Card, Form } from "react-bootstrap";
+import _ from "lodash";
 
 export const VideoList = (props) => {
-  const video = props.videos.map((video, index) => {
-    const url = "https://www.youtube.com/embed/" + video.id.videoId;
-
-    return (
-      <div style={{ margin: "20px", textAlign: "center" }} key={index}>
-        <iframe
-          id="ytplayer"
-          type="ytplayer"
-          width="480"
-          height="270"
-          src={url}
-          frameBorder="0"
-          title={index}
-        />
-      </div>
-    );
-  });
-
-  return <div style={{ marginTop: "10px" }}>{video}</div>;
+  return (
+    <div>
+      {props.isLoading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          {props.videos.length !== 0 ? (
+            <CardColumns>
+              {props.videos.map((video) => (
+                <div key={video.id.videoId}>
+                  <Card className="border-none">
+                    {/* <div onClick={() => handleModalSubmit(image)} variant="light"> */}
+                    <div variant="light">
+                      <Card.Img
+                        variant="top"
+                        src={video.snippet.thumbnails.high.url}
+                      />
+                      <div>{video.snippet.title}</div>
+                      <a
+                        href={`https://www.youtube.com/embed/${video.id.videoId}`}
+                      >
+                        YouTubeのリンク（埋め込み）
+                      </a>
+                      <a
+                        href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+                      >
+                        YouTubeのリンク
+                      </a>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+            </CardColumns>
+          ) : (
+            <div>検索結果なし！もう一度ボタンをおしてください</div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };

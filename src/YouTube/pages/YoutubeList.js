@@ -2,6 +2,7 @@ import "../../assets/App.css";
 import React, { useState, useCallback } from "react";
 import { Button, CardColumns, Card, Form } from "react-bootstrap";
 import _ from "lodash";
+import { VideoList } from "../components/VideoList";
 // import { VerticallyCenteredModal } from "../components/VerticallyCenteredModal";
 // import { Toast } from "../components/Toast";
 // import { toast } from "react-toastify";
@@ -109,43 +110,8 @@ export const YoutubeList = () => {
           </Button>
         </div>
         <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
-        {isLoading ? (
-          <div>loading...</div>
-        ) : (
-          <>
-            {/* <div>{videos}</div> */}
-            {videos.length !== 0 ? (
-              <CardColumns>
-                {videos.map((video) => (
-                  <div key={video.id.videoId}>
-                    <Card className="border-none">
-                      {/* <div onClick={() => handleModalSubmit(image)} variant="light"> */}
-                      <div variant="light">
-                        <Card.Img
-                          variant="top"
-                          src={video.snippet.thumbnails.high.url}
-                        />
-                        <div>{video.snippet.title}</div>
-                        <a
-                          href={`https://www.youtube.com/embed/${video.id.videoId}`}
-                        >
-                          YouTubeのリンク（埋め込み）
-                        </a>
-                        <a
-                          href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
-                        >
-                          YouTubeのリンク
-                        </a>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </CardColumns>
-            ) : (
-              <div>検索結果なし！もう一度ボタンをおしてください</div>
-            )}
-          </>
-        )}
+        {/* ------------------------- */}
+        <VideoList videos={videos} isLoading={isLoading} />
 
         {/* clickedImageの有無によって表示を分岐
 これによって、clickeexport const functionName = (params) => {
