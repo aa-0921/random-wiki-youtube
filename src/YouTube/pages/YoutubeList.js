@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
 // import _ from "lodash";
 import { VideoList } from "../components/VideoList";
+import { Grass } from "../components/Grass";
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
@@ -90,11 +91,15 @@ export const YoutubeList = () => {
         fetchWikiDataFromTitle(randomWikiTitle).then(function (
           randomWikiTitle
         ) {
-          getYoutubeData(randomWikiTitle).then(function (result) {
-            setDisplayRandomWikiTitle(randomWikiTitle);
-            setVideos(result);
-            setIsLoading(false);
-          });
+          getYoutubeData(randomWikiTitle)
+            .then(function (result) {
+              setDisplayRandomWikiTitle(randomWikiTitle);
+              setVideos(result);
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
         });
       });
     },
@@ -141,6 +146,7 @@ export const YoutubeList = () => {
 
   return (
     <div className="text-center">
+      <Grass />
       <div className="container flex flex-col items-center">
         <div className="form-block w-1/2 my-4 pt-20">
           <Button onClick={() => onSubmit()} className="my-2">
