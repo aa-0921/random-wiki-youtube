@@ -16,7 +16,7 @@ export const VideoList = (props) => {
             {props.videos ? (
               <>
                 {props.videos.map((video) => (
-                  <div key={video.id.videoId}>
+                  <div key={video.id.videoId} className="m-2">
                     {/* ----------------------------- */}
                     <div className="card_container md:h-auto max-h-96">
                       <div className="card">
@@ -94,7 +94,7 @@ export const VideoList = (props) => {
           {/* ) : (
             <div>{videoExistText}</div>
           )} */}
-          <div>{props.videoExistText}</div>
+          <div className="h-32 p-10">{props.videoExistText}</div>
         </>
       )}
     </div>

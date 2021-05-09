@@ -16,12 +16,12 @@ export const BackGroungParticles = () => {
               },
             },
             line_linked: {
-              enable: true,
+              enable: false,
               // opacity: 0.02,
-              opacity: 0.12,
+              // opacity: 0.12,
             },
             move: {
-              direction: "right",
+              // direction: "right",
               // speed: 0.05,
               speed: 0.95,
             },

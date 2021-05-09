@@ -179,6 +179,10 @@ export const YoutubeList = () => {
     return tempEl.firstElementChild;
   };
 
+  useEffect(() => {
+    onSubmit();
+  }, []);
+
   return (
     <div className="text-center flex  items-center justify-items-center">
       <BackGroungParticles />
@@ -186,16 +190,19 @@ export const YoutubeList = () => {
       <div className="youtubeList-container container flex flex-col items-center">
         <div className="form-block w-1/2 my-4 pt-20">
           {/* <Button onClick={() => onSubmit()} className="glass-container my-2"> */}
-          <div onClick={() => onSubmit()} className="glass-container my-2">
+          <div
+            onClick={() => onSubmit()}
+            className="glass-container my-2 h-16 text-4xl cursor-pointer"
+          >
             What's coming up
             {/* </Button> */}
           </div>
         </div>
-        <div className="glass-container display-query text-2xl my-12">
+        <div className="glass-container display-query text-2xl my-12 w-auto h-16 p-10">
           {displayRandomWikiTitle}
         </div>
 
-        <div className="video-list-wrap">
+        <div className="video-list-wrap ">
           <VideoList
             videos={videos}
             isLoading={isLoading}
@@ -218,7 +225,7 @@ dImage内のhashでundefinedのエラーがでない */}
         {/* <Toast /> */}
         <div
           id="set-wiki-extract"
-          className="glass-container display-query text-2xl"
+          className="glass-container display-query text-2xl h-32 p-10"
         ></div>
       </div>
     </div>

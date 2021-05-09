@@ -49,6 +49,12 @@ body {
   /* padding: 20px; */
 }
 
+.card {
+  /* border: 1px solid #f9f9f942 !important; */
+  /* border: 1px solid #5e5e5e20 !important; */
+  border: 1px solid black !important;
+}
+
 .card_container .card {
   position: relative;
   border-radius: 5px;
@@ -80,7 +86,9 @@ body {
   bottom: 0;
   text-align: center;
   text-transform: uppercase;
-  background-color: #2196f342;
+  /* background-color: #2196f342; */
+  background-color: #f9f9f942;
+
   color: #fff;
   bottom: -100%;
   /* box-shadow: 0 -8px 10px #0002; */
