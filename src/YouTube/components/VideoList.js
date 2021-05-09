@@ -3,6 +3,7 @@ import React from "react";
 import { CardColumns, Card } from "react-bootstrap";
 
 export const VideoList = (props) => {
+  console.log("VideoListのprops.videos", props.videos);
   return (
     <div>
       {props.isLoading ? (
@@ -20,7 +21,10 @@ export const VideoList = (props) => {
                       variant="top"
                       src={video.snippet.thumbnails.high.url}
                     />
-                    <div>{video.snippet.title}</div>
+                    <div>動画のタイトル：{video.snippet.title}</div>
+                    <div>動画の説明：{video.snippet.description}</div>
+                    <div>チャンネルのタイトル{video.snippet.channelTitle}</div>
+
                     <a
                       href={`https://www.youtube.com/embed/${video.id.videoId}`}
                     >

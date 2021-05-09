@@ -153,7 +153,9 @@ export const YoutubeList = () => {
             What's coming up
           </Button>
         </div>
-        <div className="display-query text-2xl">{displayRandomWikiTitle}</div>
+        <div className="display-query text-2xl my-12">
+          {displayRandomWikiTitle}
+        </div>
 
         <div className="video-list-wrap">
           <VideoList
