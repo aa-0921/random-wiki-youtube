@@ -52,7 +52,18 @@ body {
 .card {
   /* border: 1px solid #f9f9f942 !important; */
   /* border: 1px solid #5e5e5e20 !important; */
-  border: 1px solid black !important;
+  /* border: 1px solid black !important; */
+  color: white !important;
+  gap: 20px !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(5px) !important;
+  background-color: rgba(0, 0, 0, 0);
+  /* background-color: rgba(0, 191, 255, 0.075); */
+
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px !important;
+  border: 2px rgba(255, 255, 255, 0.4) solid !important;
+  border-bottom: 2px rgba(40, 40, 40, 0.35) solid !important;
+  border-right: 2px rgba(40, 40, 40, 0.35) solid !important;
 }
 
 .card_container .card {
@@ -163,6 +174,12 @@ body {
 .card_container .card:hover .card_footer .social_box a:hover .icon {
   color: #80b0ff;
   text-shadow: 0 1px 4px #fff1;
+}
+
+.card:hover .card-video-title {
+  opacity: 0;
+  transition-delay: 0.8s;
+  transition: 0.1s ease-in-out;
 }
 
 /* -----particle */

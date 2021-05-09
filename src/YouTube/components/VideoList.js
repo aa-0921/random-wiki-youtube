@@ -27,7 +27,7 @@ export const VideoList = (props) => {
                             src={video.snippet.thumbnails.high.url}
                             alt=""
                           />
-                          <div className="font-bold m-8">
+                          <div className="card-video-title font-bold m-8">
                             {/* 動画のタイトル */}
                             {video.snippet.title}
                           </div>

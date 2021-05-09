@@ -225,7 +225,7 @@ dImage内のhashでundefinedのエラーがでない */}
         {/* <Toast /> */}
         <div
           id="set-wiki-extract"
-          className="glass-container display-query text-2xl h-32 p-10"
+          className="glass-container display-query text-2xl h-auto p-10"
         ></div>
       </div>
     </div>
