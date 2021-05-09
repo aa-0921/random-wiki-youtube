@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
 // import _ from "lodash";
 import { VideoList } from "../components/VideoList";
-import { Grass } from "../components/Grass";
+import { BackGroungParticles } from "../components/BackGroungParticles";
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
@@ -180,15 +180,18 @@ export const YoutubeList = () => {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center flex  items-center justify-items-center">
+      <BackGroungParticles />
       {/* <Grass /> */}
-      <div className="container flex flex-col items-center">
+      <div className="youtubeList-container container flex flex-col items-center">
         <div className="form-block w-1/2 my-4 pt-20">
-          <Button onClick={() => onSubmit()} className="my-2">
+          {/* <Button onClick={() => onSubmit()} className="glass-container my-2"> */}
+          <div onClick={() => onSubmit()} className="glass-container my-2">
             What's coming up
-          </Button>
+            {/* </Button> */}
+          </div>
         </div>
-        <div className="display-query text-2xl my-12">
+        <div className="glass-container display-query text-2xl my-12">
           {displayRandomWikiTitle}
         </div>
 
@@ -213,7 +216,10 @@ dImage内のhashでundefinedのエラーがでない */}
           <></>
         )} */}
         {/* <Toast /> */}
-        <div id="set-wiki-extract" className="display-query text-2xl"></div>
+        <div
+          id="set-wiki-extract"
+          className="glass-container display-query text-2xl"
+        ></div>
       </div>
     </div>
   );
