@@ -78,6 +78,28 @@ export const YoutubeList = () => {
     return data.items;
   }, []);
 
+  const setText = useCallback(async function (text) {
+    // await setVideoExistText(text);
+
+    // debugger;
+
+    if (!isFirstView) {
+      // debugger;
+
+      if (text !== "YouTubeAPIの制限を超えています") {
+        // debugger;
+
+        if (videos.length > 0) {
+          setVideoExistText("YouTube関連動画");
+        } else {
+          setVideoExistText("YouTube関連動画なし。");
+        }
+      } else {
+        setVideoExistText("YouTubeAPIの制限を超えています");
+      }
+    }
+  }, []);
+
   const onSubmit = useCallback(
     function () {
       var parent_element = document.getElementById("set-wiki-extract");
@@ -96,9 +118,22 @@ export const YoutubeList = () => {
               setDisplayRandomWikiTitle(randomWikiTitle);
               setVideos(result);
               setIsLoading(false);
+              // debugger;
+
+              var text = "";
+              return text;
             })
             .catch((error) => {
-              console.log("error", error);
+              // debugger;
+              console.log("getYoutubeDataのerror", error);
+              var text = "YouTubeAPIの制限を超えています";
+              // return Promise.reject(error);
+              // text;
+              debugger;
+              return text;
+            })
+            .then(function (text) {
+              setText(text);
             });
         });
       });
@@ -106,21 +141,21 @@ export const YoutubeList = () => {
     [fetchWikiDataFromTitle, getRandomWikiData, getYoutubeData]
   );
 
-  useEffect(() => {
-    console.log("ifの中のvideos", videos);
-    // console.log("ifの中のvideos.class", videos.class);
+  // useEffect(() => {
+  //   console.log("ifの中のvideos", videos);
+  //   // console.log("ifの中のvideos.class", videos.class);
 
-    console.log("videos.length > 0", videos.length > 0);
+  //   console.log("videos.length > 0", videos.length > 0);
 
-    // isFirstView;
-    if (!isFirstView) {
-      if (videos.length > 0) {
-        setVideoExistText("YouTube関連動画");
-      } else {
-        setVideoExistText("YouTube関連動画なし。");
-      }
-    }
-  }, [videos]);
+  //   // isFirstView;
+  //   if (!isFirstView) {
+  //     if (videos.length > 0) {
+  //       setVideoExistText("YouTube関連動画");
+  //     } else {
+  //       setVideoExistText("YouTube関連動画なし。");
+  //     }
+  //   }
+  // }, [videos]);
 
   // const notify = (text) => {
   //   toast(`${text}で検索しました`, {
@@ -146,7 +181,7 @@ export const YoutubeList = () => {
 
   return (
     <div className="text-center">
-      <Grass />
+      {/* <Grass /> */}
       <div className="container flex flex-col items-center">
         <div className="form-block w-1/2 my-4 pt-20">
           <Button onClick={() => onSubmit()} className="my-2">
