@@ -43,9 +43,9 @@ body {
   width: 33%;
 }
 .card_container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  /* display: grid; */
+  /* grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
+  /* gap: 20px; */
   /* padding: 20px; */
 }
 
@@ -80,7 +80,7 @@ body {
 
 .card_container .card .img img {
   display: block;
-  /* width: 100%; */
+  width: 100%;
   /* height: 50%; */
   object-fit: cover;
   transition: 0.3s ease-in-out;

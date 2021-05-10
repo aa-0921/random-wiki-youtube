@@ -12,7 +12,7 @@ export const VideoList = (props) => {
         <>
           {/* {props.videos.length !== 0 ? ( */}
           {/* <CardColumns> */}
-          <div className="video-wrap flex items-center justify-center">
+          <div className="video-wrap flex items-center justify-center w-screen">
             {props.videos ? (
               <>
                 {props.videos.map((video) => (
@@ -27,7 +27,7 @@ export const VideoList = (props) => {
                             src={video.snippet.thumbnails.high.url}
                             alt=""
                           />
-                          <div className="card-video-title font-bold m-8">
+                          <div className="card-video-title font-bold m-1">
                             {/* 動画のタイトル */}
                             {video.snippet.title}
                           </div>
