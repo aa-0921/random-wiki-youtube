@@ -185,7 +185,7 @@ export const YoutubeList = () => {
 
   return (
     <div className="text-center flex  items-center justify-items-center">
-      {/* <BackGroungParticles /> */}
+      <BackGroungParticles />
       {/* <Grass /> */}
       <div className="youtubeList-container container flex flex-col items-center">
         <div className="form-block w-1/2 my-8">
