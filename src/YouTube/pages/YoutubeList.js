@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "react-bootstrap";
 // import _ from "lodash";
 import { VideoList } from "../components/VideoList";
-import { BackGroungParticles } from "../components/BackGroungParticles";
+import { BackGroundParticles } from "../components/BackGroundParticles";
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const YOUTUBE_SERACH_API_URI = "https://www.googleapis.com/youtube/v3/search?";
@@ -185,7 +185,7 @@ export const YoutubeList = () => {
 
   return (
     <div className="text-center flex  items-center justify-items-center">
-      <BackGroungParticles />
+      <BackGroundParticles />
       {/* <Grass /> */}
       <div className="youtubeList-container container flex flex-col items-center">
         <div className="form-block w-1/2 my-8">
